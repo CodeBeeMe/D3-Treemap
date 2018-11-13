@@ -144,6 +144,25 @@ body {
   //text-shadow: 1px 1px 2px #111;
 }
 
+#chart-title {
+  font-family: "Expletus Sans", cursive;
+  //position: absolute;
+  //margin: -7% 0 0 32%;
+  //padding-top: 40px;
+  text-align: center;
+  color: #75aaaa;
+}
+
+#description {
+  font-family: "Expletus Sans", cursive;
+  //position: absolute;
+  //margin: -3% 0 0 29%;
+  //padding-top: 40px;
+  margin-top: -10px;
+  text-align: center;
+  color: #75aaaa;
+}
+
 #chart {
   @include radius(15px);
   padding: 15px 45px 65px 45px;
@@ -210,27 +229,28 @@ body {
   //@include radius(15px);
   background: #343a40;
   .tile {
-    display: flex;
-    margin: auto;
     //fill: #75aaaa;
-    opacity: .5;
+    opacity: .6;
     stroke: #000;
     stroke-width: 1px;
-    text-anchor: middle;
   }
   .tile:hover {
     //fill: #343a40;
     fill: #baffff;
+    //stroke: #baffff;
+    //stroke-width: 1px;
     //width: 6px;
   }  
 }
 
 
 #legend {
-  //background: #262b30;
   position: absolute;
-  margin: 51.5% 0 0 38%;
-  padding: 5px 5px 10px 5px;
+  display: flex;
+  //background: #262b30;
+  justify-content: center;  
+  margin-top: 57%;
+  padding: 25px 10px 0px 0px;
   color: #f8f8f8;
   text-align: right;
   font-size: 12px;
@@ -242,23 +262,14 @@ body {
   }
 }
 
-#chart-title {
-  font-family: "Expletus Sans", cursive;
-  //position: absolute;
-  //margin: -7% 0 0 32%;
-  //padding-top: 40px;
-  text-align: center;
-  color: #75aaaa;
-}
-
-#description {
-  font-family: "Expletus Sans", cursive;
-  //position: absolute;
-  //margin: -3% 0 0 29%;
-  //padding-top: 40px;
-  margin-top: -10px;
-  text-align: center;
-  color: #75aaaa;
+#sec {
+  user-select: none;
+  //background: #262b30;
+  .legend-item {
+    stroke: #000;
+    stroke-width: 2px;
+    opacity: .6;
+  }
 }
 
 #nfo {
