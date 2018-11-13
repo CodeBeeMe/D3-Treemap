@@ -94,27 +94,25 @@ window.onload = () => {
     console.log(moviesData);
     console.log(kickStData);
 
-    const root = d3
-    .hierarchy(gamesData)
-    .sum(d => d.value)
-    .sort((a, b) => b.value - a.value);
+    const root = d3.hierarchy(gamesData)
+                   .sum(d => d.value)
+                   .sort((a, b) => b.value - a.value);
 
-    console.log(root);
-    console.log(root.descendants());
+    console.log(root.data.children);
+    //console.log(root.descendants());
 
-    const treemapLayout = d3
-    .treemap()
-    .size([width, height])
-    .paddingOuter(10);
+    const treemapLayout = d3.treemap()
+                            .size([width, height])
+                            .paddingOuter(10);
 
     treemapLayout(root);
     
-    let vidDescipt = "Top 100 Most Sold Video Games Grouped by Platform",
+    let vidDescript = "Top 100 Most Sold Video Games Grouped by Platform",
         movDescript = "Top 100 Highest Grossing Movies Grouped By Genre",
         kickDescript = "Top 100 Most Pledged Kickstarter Campaigns Grouped By Category";
     
     function description(title) {
-       return title === "Video Game Sales Data Top 100" ? vidDescipt 
+       return title === "Video Game Sales Data Top 100" ? vidDescript 
       : title === "Movies" ? movDescript
       : title === "Kickstarter" ? kickDescript : null;
     }
@@ -145,23 +143,21 @@ window.onload = () => {
       .attr("height", height)
       .append("g");
 
-    const node = d3
-      .select("svg g")
-      .selectAll("g")
-      .data(root.descendants())
-      .enter()
-      .append("g")
-      .attr("class", "node")
-      .attr('transform', (d) => 'translate(' + [d.x0, d.y0] + ')')
+    const node = d3.select("svg g")
+                   .selectAll("g")
+                   .data(root.descendants())
+                   .enter()
+                   .append("g")
+                   .attr("class", "node")
+                   .attr('transform', (d) => 'translate(' + [d.x0, d.y0] + ')');
     
     node
       .append("rect")
       .attr("class", "tile")
       .attr("data-name", d => d.data.name)
       .attr("data-category", d => d.data.category === undefined ? 
-              d.data.name + " Collection"
-            : d.data.category
-           )
+                                  d.data.name + " Collection"
+                                : d.data.category)
       .attr("data-value", d => d.value)
       //.attr("x", d => d.x0)
       //.attr("y", d => d.y0)
@@ -186,7 +182,7 @@ window.onload = () => {
       : d.data.category === "PS3" ? "#e7ba52"
       : d.data.category === "PS4" ? "#e7cb94"
       : d.data.category === "PC" ? "#843c39"
-      : d.data.category === undefined ? "#343a40" : "#000"      
+      : d.data.category === undefined ? "#606D7A" : "#000"      
     )
       .on("mouseover", d => {
       tooltip
@@ -201,7 +197,7 @@ window.onload = () => {
                                     : d.data.category) + "</strong>" + "<br/>" +
         "Value: " + "<strong>" + d.value + "</strong>")
         .style("left", d3.event.pageX - width / 2 + "px")
-        .style("top", d3.event.pageY - height / 5.5 + "px");
+        .style("top", d3.event.pageY - height / 5.2 + "px");
     })
       .on("mouseout", d => {
       tooltip
@@ -220,63 +216,61 @@ window.onload = () => {
              d.data.name.slice(0, 10) : 
              d.data.name)
       .style("font-size", "8px")
-      .style("fill", "#baffff");  
+      .style("fill", "#000");
+      //.style("fill", "#baffff");
     
     
-  });
+    //Basic Legend colors chart
 
-  //Basic Legend colors chart
-  const legendData = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-
-  const legend = d3
-  .select("#legend")
-  .append("svg")
-  .attr("id", "sec")
-  .attr("width", 265)
-  .attr("height", 30);
+  d3.select("#legend")
+    .append("svg")
+    .attr("id", "sec")
+    .attr("width", width)
+    .attr("height", 15)
+    .append("g")
+    .attr("class", "legend-group");
+  
+  const legend = d3.select("#sec g")
+                   .selectAll("g")
+                   .data(root.data.children)
+                   .enter()
+                   .append("g")                   
+                   .attr('transform', (d, i) => 'translate(' +  i * 65  + ')');
 
   legend
-    .selectAll("rect")
-    .data(legendData)
-    .enter()
     .append("rect")
-    .attr("class", "legend-cell")
-    .attr("x", (d, i) => 40 + i * 15)
+    .attr("class", "legend-item")
     .attr("width", 15)
     .attr("height", 15)
-    .attr(
-    "fill",
-    d =>
-    d < 1
-    ? "#065059"
-    : d >= 1 && d < 2
-    ? "#08616b"
-    : d >= 2 && d < 3
-    ? "#088d9c"
-    : d >= 3 && d < 4
-    ? "#20a6b5"
-    : d >= 4 && d < 5
-    ? "#42b8c6"
-    : d >= 5 && d < 6
-    ? "#6bcbd6"
-    : d >= 6 && d < 7
-    ? "#9edae1"
-    : d >= 7 && d < 8 ? "#c6eaef" : d >= 8 ? "#fff" : "None"
-  );
+    .attr("fill", d =>
+        d.name === "2600" ? "#d6616b"
+      : d.name === "GB" ? "#7b4173"
+      : d.name === "GBA" ? "#a55194"
+      : d.name === "DS" ? "#ce6dbd"
+      : d.name === "3DS" ? "#de9ed6"
+      : d.name === "NES" ? "#9c9ede"
+      : d.name === "SNES" ? "#6b6ecf"
+      : d.name === "N64" ? "#5254a3"
+      : d.name === "Wii" ? "#393b79"
+      : d.name === "XB" ? "#637939"
+      : d.name === "X360" ? "#8ca252"
+      : d.name === "XOne" ? "#b5cf6b"
+      : d.name === "PSP" ? "#cedb9c"
+      : d.name === "PS" ? "#8c6d31"
+      : d.name === "PS2" ? "#bd9e39"
+      : d.name === "PS3" ? "#e7ba52"
+      : d.name === "PS4" ? "#e7cb94"
+      : d.name === "PC" ? "#843c39"
+      : d.name === undefined ? "#465059" : "#000");
 
   legend
-    .append("text")
-    .attr("transform", "translate(" +  20 + " ," + 11 + ")")
+    .append("text")    
     .style("text-anchor", "middle")
     .style("fill", "#75aaaa")
-    .text("<3%")
-    .style("font-size", "11px");
-
-  legend
-    .append("text")
-    .attr("transform", "translate(" +  228 + " ," + 11 + ")")    
-    .style("text-anchor", "middle")
-    .style("fill", "#75aaaa")
-    .text(">66%")
-    .style("font-size", "11px");
+    .text(d => d.name)
+    .style("font-size", "10px")
+    .attr("x", 27)
+    .attr("y", 11);
+  
+  });
 };
